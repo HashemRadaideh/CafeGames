@@ -1,9 +1,9 @@
 import './tile.scss'
-import { Piece } from './pieces';
+import Piece from './pieces';
 
 interface Props {
-  row: number;
   col: number;
+  row: number;
   img: string;
 }
 
