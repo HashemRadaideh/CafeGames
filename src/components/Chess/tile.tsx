@@ -1,22 +1,16 @@
 import './tile.scss'
+import { Piece } from './pieces';
 
 interface Props {
-  number: number;
+  row: number;
+  col: number;
+  img: string;
 }
 
-export default function Tile({ number }: Props) {
-  if (number % 2) {
-    return (
-      <div className="tile white-tile">
-        <img src="" />
-      </div>
-    );
-  }
-  else {
-    return (
-      <div className="tile black-tile">
-        <img src="" />
-      </div>
-    );
-  }
+export default function Tile({ row, col, img }: Props) {
+  return (
+    <div className={`tile ${(row + col) % 2 ? "white" : "black"}-tile`}>
+      <Piece img={img} row={row} col={col} />
+    </div>
+  );
 }

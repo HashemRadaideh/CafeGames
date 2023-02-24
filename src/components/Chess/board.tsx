@@ -1,21 +1,29 @@
 import './board.scss'
 import Tile from './tile';
-
-const HAxis = ["a", "b", "c", "d", "e", "f", "g", "h"]
-const VAxis = ["1", "2", "3", "4", "5", "6", "7", "8"]
+import Pieces from './pieces';
 
 export default function Board() {
-  let board = [];
+  const Board: JSX.Element[] = Array(64);
+  const HAxis: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"]
+  const VAxis: string[] = ["1", "2", "3", "4", "5", "6", "7", "8"]
 
-  for (const [index1] of HAxis.entries()) {
-    for (const [index2] of VAxis.entries()) {
-      board.push(<Tile number={index1 + index2} />);
+  for (const [row] of HAxis.entries()) {
+    for (const [col] of VAxis.entries()) {
+      let image: string = "";
+
+      Pieces.forEach(piece => {
+        if (piece.row === row && piece.col === col) {
+          image = piece.img;
+        }
+      });
+
+      Board.push(<Tile img={image} row={row} col={col} key={`${col},${row}`} />);
     }
   }
 
   return (
     <div className="board">
-      {board}
+      {Board}
     </div>
   )
 }
