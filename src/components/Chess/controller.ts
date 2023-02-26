@@ -10,6 +10,7 @@ export default class Controller {
   >;
   // private setTiles: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
   private setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>;
+  private Pieces: PieceProps[];
   private GridX: number;
   private setGridX: React.Dispatch<React.SetStateAction<number>>;
   private GridY: number;
@@ -22,6 +23,7 @@ export default class Controller {
     ActivePiece: HTMLElement | null,
     setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
     setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>,
+    Pieces: PieceProps[],
     // setTiles: React.Dispatch<React.SetStateAction<JSX.Element[]>>,
     GridX: number,
     setGridX: React.Dispatch<React.SetStateAction<number>>,
@@ -32,6 +34,7 @@ export default class Controller {
     this.team = team;
 
     this.setPieces = setPieces;
+    this.Pieces = Pieces;
     // this.setTiles = setTiles;
 
     this.activePiece = ActivePiece;
@@ -44,9 +47,20 @@ export default class Controller {
     this.GridY = GridY;
   }
 
+  // if (
+  //   !window
+  //     .getComputedStyle(element)
+  //     .backgroundImage.includes(`${this.team.toLowerCase}`)
+  // )
+  //   return;
+
   grabPiece(e: React.MouseEvent) {
     const element: HTMLElement = e.target as HTMLElement;
     if (!element.classList.contains("piece")) return;
+
+    const backgroundImage = window.getComputedStyle(element).backgroundImage;
+    if (!backgroundImage.includes(`${this.team.toLowerCase()}`)) return;
+
     this.setActivePiece(element);
 
     if (!this.chessboard.current) return;
@@ -86,37 +100,44 @@ export default class Controller {
   dropPiece(e: React.MouseEvent) {
     if (!this.chessboard.current) return;
     const chessboard = this.chessboard.current;
+    const rule = new Rules(this.chessboard, this.team, this.Pieces);
 
     const gridX: number = Math.floor((e.clientX - chessboard.offsetLeft) / 100);
-
     const gridY: number = Math.floor((e.clientY - chessboard.offsetTop) / 100);
 
-    this.setPieces((pieces: PieceProps[]) => {
-      const rule = new Rules(this.team, pieces);
+    const currentPiece = this.Pieces.find(
+      (p: PieceProps) => p.col === this.GridX && p.row === this.GridY
+    );
 
-      const result = pieces.map((p) => {
-        if (!this.activePiece) return p;
+    if (currentPiece) {
+      if (!rule.isMoveValid(currentPiece, gridX, gridY)) {
+        if (!this.activePiece) return;
 
-        if (p.col === this.GridX && p.row === this.GridY) {
-          if (!rule.isMoveValid(p, gridX, gridY)) {
-            this.activePiece.style.position = "relative";
-            this.activePiece.style.removeProperty("top");
-            this.activePiece.style.removeProperty("left");
+        this.activePiece.style.position = "relative";
+        this.activePiece.style.removeProperty("top");
+        this.activePiece.style.removeProperty("left");
 
-            return p;
+        this.setActivePiece(null);
+        return;
+      }
+
+      const newPieces: PieceProps[] = this.Pieces.reduce(
+        (pieces: PieceProps[], piece: PieceProps) => {
+          if (currentPiece === piece) {
+            piece.col = gridX;
+            piece.row = gridY;
+            pieces.push(piece);
+          } else if (!(piece.col === gridX && piece.row === gridY)) {
+            pieces.push(piece);
           }
 
-          p.col = gridX;
-          p.row = gridY;
+          return pieces;
+        },
+        [] as PieceProps[]
+      );
 
-          return p;
-        }
-
-        return p;
-      });
-
-      return result;
-    });
+      this.setPieces(newPieces);
+    }
 
     this.setActivePiece(null);
   }

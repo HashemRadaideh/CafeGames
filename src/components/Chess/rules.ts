@@ -1,25 +1,48 @@
 import { PieceProps, Team } from "./pieces";
 
 export default class Rules {
+  private chessboard: React.RefObject<HTMLDivElement>;
   private team: Team;
-  private pieces: PieceProps[];
+  private Pieces: PieceProps[];
 
-  constructor(team: Team, pieces: PieceProps[]) {
+  constructor(
+    Chessboard: React.RefObject<HTMLDivElement>,
+    team: Team,
+    pieces: PieceProps[]
+  ) {
+    this.chessboard = Chessboard;
     this.team = team;
-    this.pieces = pieces;
+    this.Pieces = pieces;
+  }
+
+  isPieceChangeable(piece: PieceProps): boolean {
+    return piece.type === "Pawn" && piece.row === 0;
+  }
+
+  isCastling(piece: PieceProps, newCol: number, newRow: number): boolean {
+    const oldRow = piece.row;
+    const oldCol = piece.col;
+
+    return (
+      piece.type === "King" &&
+      Math.abs(newCol - oldCol) === 2 &&
+      newRow === oldRow
+    );
   }
 
   isTileOccupied(col: number, row: number) {
-    for (const piece of this.pieces)
-      if (piece.col === col && piece.row === row) return true;
-    return false;
+    return this.Pieces.find((piece) => piece.col === col && piece.row === row)
+      ? true
+      : false;
   }
 
   isOpponent(col: number, row: number) {
-    for (const piece of this.pieces)
-      if (piece.col === col && piece.row === row && piece.team !== this.team)
-        return true;
-    return false;
+    return this.Pieces.find(
+      (piece) =>
+        piece.col === col && piece.row === row && piece.team !== this.team
+    )
+      ? true
+      : false;
   }
 
   isStraight(
@@ -28,36 +51,57 @@ export default class Rules {
     newCol: number,
     newRow: number
   ): boolean {
-    for (let i = 0; i < 8; i++) {
-      if (newCol === oldCol + i && newRow === oldRow) return true;
+    if (oldCol === newCol) {
+      const direction = oldRow < newRow ? 1 : -1;
 
-      if (newCol === oldCol - i && newRow === oldRow) return true;
+      for (let row = oldRow + direction; row != newRow; row += direction)
+        if (this.isTileOccupied(oldCol, row)) return false;
 
-      if (newCol === oldCol && newRow === oldRow + i) return true;
+      return (
+        !this.isTileOccupied(newCol, newRow) || this.isOpponent(newCol, newRow)
+      );
+    }
 
-      if (newCol === oldCol && newRow === oldRow - i) return true;
+    if (oldRow === newRow) {
+      const direction = oldCol < newCol ? 1 : -1;
+
+      for (let col = oldCol + direction; col != newCol; col += direction)
+        if (this.isTileOccupied(col, oldRow)) return false;
+
+      return (
+        !this.isTileOccupied(newCol, newRow) || this.isOpponent(newCol, newRow)
+      );
     }
 
     return false;
   }
 
-  isDiagnoal(
+  isDiagonal(
     oldCol: number,
     oldRow: number,
     newCol: number,
     newRow: number
   ): boolean {
-    for (let i = 0; i < 8; i++) {
-      if (newCol === oldCol + i && newRow === oldRow + i) return true;
+    const colDiff = newCol - oldCol;
+    const rowDiff = newRow - oldRow;
 
-      if (newCol === oldCol - i && newRow === oldRow - i) return true;
-
-      if (newCol === oldCol - i && newRow === oldRow + i) return true;
-
-      if (newCol === oldCol + i && newRow === oldRow - i) return true;
+    if (Math.abs(colDiff) !== Math.abs(rowDiff)) {
+      return false;
     }
 
-    return false;
+    const stepCol = colDiff > 0 ? 1 : -1;
+    const stepRow = rowDiff > 0 ? 1 : -1;
+
+    for (let i = 1; i < Math.abs(colDiff); i++) {
+      const col = oldCol + i * stepCol;
+      const row = oldRow + i * stepRow;
+
+      if (this.isTileOccupied(col, row)) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   isMoveValid(piece: PieceProps, newCol: number, newRow: number): boolean {
@@ -68,41 +112,28 @@ export default class Rules {
 
     switch (piece.type) {
       case "Bishop":
-        if (this.isDiagnoal(oldCol, oldRow, newCol, newRow)) return true;
-        return false;
+        return this.isDiagonal(oldCol, oldRow, newCol, newRow);
 
       case "King":
-        if (
-          newCol === oldCol + 1 ||
-          newCol === oldCol - 1 ||
-          newRow === oldRow + 1 ||
-          newRow === oldRow - 1
-        ) {
-          if (this.isDiagnoal(oldCol, oldRow, newCol, newRow)) return true;
-          if (this.isStraight(oldCol, oldRow, newCol, newRow)) return true;
-        }
+        if (Math.abs(newCol - oldCol) <= 1 && Math.abs(newRow - oldRow) <= 1)
+          return true;
+
+        if (Math.abs(newCol - oldCol) === 2 && newRow === oldRow) return true;
 
         return false;
 
       case "Knight":
+        const dx = Math.abs(newCol - oldCol);
+        const dy = Math.abs(newRow - oldRow);
         if (
-          (newCol === oldCol + 1 || newCol === oldCol - 1) &&
-          (newRow === oldRow + 2 || newRow === oldRow - 2)
+          !this.isTileOccupied(newCol, newRow) ||
+          this.isOpponent(newCol, newRow)
         )
-          return true;
-
-        if (
-          (newCol === oldCol + 2 || newCol === oldCol - 2) &&
-          (newRow === oldRow + 1 || newRow === oldRow - 1)
-        )
-          return true;
-
+          return (dx === 1 && dy === 2) || (dx === 2 && dy === 1);
         return false;
 
       case "Pawn":
-        if (newRow === 0) {
-          // TODO: implement a change piece function for pawns
-        }
+        if (newRow === 0) return true;
 
         if (oldCol === newCol && !this.isTileOccupied(newCol, newRow)) {
           if (
@@ -124,15 +155,30 @@ export default class Rules {
           return true;
         }
 
+        if (
+          newRow === oldRow - 1 &&
+          (newCol === oldCol + 1 || newCol === oldCol - 1)
+        ) {
+          // Check for En Passant capture
+          const lastMove = this.Pieces[this.Pieces.length - 1];
+          if (
+            lastMove.type === "Pawn" &&
+            lastMove.row === oldRow &&
+            (lastMove.col === oldCol + 1 || lastMove.col === oldCol - 1) &&
+            lastMove.row === newRow + 1
+          ) {
+            return true;
+          }
+        }
+
         return false;
 
       case "Queen":
-        if (this.isDiagnoal(oldCol, oldRow, newCol, newRow)) return true;
+        if (this.isDiagonal(oldCol, oldRow, newCol, newRow)) return true;
         if (this.isStraight(oldCol, oldRow, newCol, newRow)) return true;
 
       case "Rook":
-        if (this.isStraight(oldCol, oldRow, newCol, newRow)) return true;
-        return false;
+        return this.isStraight(oldCol, oldRow, newCol, newRow);
 
       default:
         return false;

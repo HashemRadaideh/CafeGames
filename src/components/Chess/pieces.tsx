@@ -204,22 +204,5 @@ export function InitializePieces(team: Team) {
     type: 'Queen',
   })
 
-  // Rook
-  pieces.push({
-    img: `./assets/${player.toLowerCase()}-rook.png`,
-    row: 7,
-    col: 0,
-    team: player,
-    type: 'Rook',
-  })
-
-  pieces.push({
-    img: `./assets/${player.toLowerCase()}-rook.png`,
-    row: 7,
-    col: 7,
-    team: player,
-    type: 'Rook',
-  })
-
   return pieces;
 }

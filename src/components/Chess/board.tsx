@@ -7,7 +7,7 @@ import { useRef, useState } from 'react';
 export default function Board() {
   const Chessboard: React.RefObject<HTMLDivElement> = useRef<HTMLDivElement>(null);
 
-  const team: Team = 'Black';
+  const team: Team = 'White';
   const [Pieces, setPieces] = useState<PieceProps[]>(InitializePieces(team));
   const Board: JSX.Element[] = InitializeTiles(Pieces, team);
 
@@ -19,7 +19,7 @@ export default function Board() {
     Chessboard,
     team,
     ActivePiece, setActivePiece,
-    setPieces, // setTiles,
+    setPieces, Pieces,// setTiles,
     GridX, setGridX,
     GridY, setGridY,
   );
