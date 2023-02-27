@@ -41,6 +41,8 @@ export function InitializePieces(team: Team) {
 
   const opponent = team === 'White' ? 'Black' : 'White';
   const player = team === 'White' ? 'White' : 'Black';
+  const kingCol = team === 'White' ? 4 : 3;
+  const queenCol = team === 'White' ? 3 : 4;
 
   // Opponent pieces
   // Bishop
@@ -64,7 +66,7 @@ export function InitializePieces(team: Team) {
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-king.png`,
     row: 0,
-    col: 4,
+    col: kingCol,
     team: opponent,
     type: 'King',
   })
@@ -101,7 +103,7 @@ export function InitializePieces(team: Team) {
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-queen.png`,
     row: 0,
-    col: 3,
+    col: queenCol,
     team: opponent,
     type: 'Queen',
   })
@@ -145,7 +147,7 @@ export function InitializePieces(team: Team) {
   pieces.push({
     img: `./assets/${player.toLowerCase()}-king.png`,
     row: 7,
-    col: 4,
+    col: kingCol,
     team: player,
     type: 'King',
   })
@@ -199,7 +201,7 @@ export function InitializePieces(team: Team) {
   pieces.push({
     img: `./assets/${player.toLowerCase()}-queen.png`,
     row: 7,
-    col: 3,
+    col: queenCol,
     team: player,
     type: 'Queen',
   })

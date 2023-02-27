@@ -1,19 +1,53 @@
-// Import the express in typescript file
 import express from 'express';
-
-// Initialize the express engine
-const app: express.Application = express();
+import http from 'http';
+import { Server } from 'socket.io'
+import cors from 'cors';
+import { randomInt } from 'crypto';
 
 // Take a port 3000 for running server.
-const port: number = 3000;
+const PORT: number = 3000;
 
-// Handling '/' Request
-app.get('/', (_req, _res) => {
-  _res.send("TypeScript With Express");
+// Initialize the express engine
+const App: express.Application = express();
+
+App.use(cors);
+
+const server = http.createServer(App)
+
+const io = new Server(server, {
+  cors: {
+    origin: 'http://localhost:5173',
+    methods: ['GET', 'POST'],
+  },
 });
 
-// Server setup
-app.listen(port, () => {
-  console.log(`TypeScript with Express
-         http://localhost:${port}/`);
+io.on("connection", (socket) => {
+  console.log(`Connected user: ${socket.id}`)
+
+  let team: string = Math.floor(Math.random() * 2) ? 'White' : 'Black';
+
+  socket.on('player_created', (data) => {
+    team = data === 'White' ? 'Black' : 'White'
+  })
+
+  socket.on('join_room', (data) => {
+    console.log(`User joined: ${socket.id}`)
+    socket.join(data);
+    socket.emit('create_player', team)
+  })
+
+  socket.on('players_turn', (data) => {
+    socket.to(data.room).emit("opponents_turn", data.pieces.reduce(
+      (pieces: any, piece: any) => {
+        piece.col = Math.abs(piece.col - 7);
+        piece.row = Math.abs(piece.row - 7);
+        pieces.push(piece);
+        return pieces;
+      }, []
+    ));
+  });
 });
+
+server.listen(PORT, () => {
+  console.log(`Server running...`)
+})

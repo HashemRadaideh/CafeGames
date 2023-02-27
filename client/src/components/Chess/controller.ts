@@ -3,6 +3,7 @@ import { PieceProps, PieceType, Team } from "./pieces";
 import Rules from "./rules";
 
 export default class Controller {
+  private socket: any;
   private chessboard: React.RefObject<HTMLDivElement>;
   private Promotion: React.RefObject<HTMLDivElement>;
   private activePiece: HTMLElement | null;
@@ -23,6 +24,7 @@ export default class Controller {
   private team: Team;
 
   constructor(
+    socket: any,
     Chessboard: React.RefObject<HTMLDivElement>,
     Promotion: React.RefObject<HTMLDivElement>,
     team: Team,
@@ -38,6 +40,7 @@ export default class Controller {
     GridY: number,
     setGridY: React.Dispatch<React.SetStateAction<number>>
   ) {
+    this.socket = socket;
     this.chessboard = Chessboard;
 
     this.Promotion = Promotion;
@@ -192,6 +195,7 @@ export default class Controller {
       );
 
       this.setPieces(newPieces);
+      this.socket.emit("players_turn", { pieces: this.Pieces, room: 10 });
     }
 
     this.setActivePiece(null);
