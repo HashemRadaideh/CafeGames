@@ -1,12 +1,17 @@
 import React from "react";
-import { PieceProps, Team } from "./pieces";
+import { PieceProps, PieceType, Team } from "./pieces";
 import Rules from "./rules";
 
 export default class Controller {
   private chessboard: React.RefObject<HTMLDivElement>;
+  private Promotion: React.RefObject<HTMLDivElement>;
   private activePiece: HTMLElement | null;
   private setActivePiece: React.Dispatch<
     React.SetStateAction<HTMLElement | null>
+  >;
+  private PromotePiece: PieceProps | null;
+  private setPromotePiece: React.Dispatch<
+    React.SetStateAction<PieceProps | null>
   >;
   // private setTiles: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
   private setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>;
@@ -19,11 +24,14 @@ export default class Controller {
 
   constructor(
     Chessboard: React.RefObject<HTMLDivElement>,
+    Promotion: React.RefObject<HTMLDivElement>,
     team: Team,
     ActivePiece: HTMLElement | null,
     setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
-    setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>,
+    PromotePiece: PieceProps | null,
+    setPromotePiece: React.Dispatch<React.SetStateAction<PieceProps | null>>,
     Pieces: PieceProps[],
+    setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>,
     // setTiles: React.Dispatch<React.SetStateAction<JSX.Element[]>>,
     GridX: number,
     setGridX: React.Dispatch<React.SetStateAction<number>>,
@@ -31,6 +39,9 @@ export default class Controller {
     setGridY: React.Dispatch<React.SetStateAction<number>>
   ) {
     this.chessboard = Chessboard;
+
+    this.Promotion = Promotion;
+
     this.team = team;
 
     this.setPieces = setPieces;
@@ -39,6 +50,9 @@ export default class Controller {
 
     this.activePiece = ActivePiece;
     this.setActivePiece = setActivePiece;
+
+    this.setPromotePiece = setPromotePiece;
+    this.PromotePiece = PromotePiece;
 
     this.setGridX = setGridX;
     this.setGridY = setGridY;
@@ -53,6 +67,40 @@ export default class Controller {
   //     .backgroundImage.includes(`${this.team.toLowerCase}`)
   // )
   //   return;
+
+  promotePawn(pieceType: PieceType) {
+    const newPieces = this.Pieces.reduce((pieces, piece) => {
+      if (
+        this.PromotePiece &&
+        piece.col === this.PromotePiece.col &&
+        piece.row === this.PromotePiece.row
+      ) {
+        piece.type = pieceType;
+        const color = piece.team === "White" ? "white" : "black";
+        switch (piece.type) {
+          case "Bishop":
+            piece.img = `./assets/${color}-bishop.png`;
+            break;
+          case "Knight":
+            piece.img = `./assets/${color}-knight.png`;
+            break;
+          case "Queen":
+            piece.img = `./assets/${color}-queen.png`;
+            break;
+          case "Rook":
+            piece.img = `./assets/${color}-rook.png`;
+            break;
+        }
+      }
+      pieces.push(piece);
+      return pieces;
+    }, [] as PieceProps[]);
+    this.setPieces(newPieces);
+
+    this.Promotion.current?.classList.add("hidden");
+
+    this.setPromotePiece(null);
+  }
 
   grabPiece(e: React.MouseEvent) {
     const element: HTMLElement = e.target as HTMLElement;
@@ -126,6 +174,13 @@ export default class Controller {
           if (currentPiece === piece) {
             piece.col = gridX;
             piece.row = gridY;
+            if (rule.isPromotable(piece)) {
+              this.Promotion.current?.classList.remove("hidden");
+              this.setPromotePiece(piece);
+            }
+            if (rule.isCastling(piece, gridX, gridY)) {
+              console.log("Castling");
+            }
             pieces.push(piece);
           } else if (!(piece.col === gridX && piece.row === gridY)) {
             pieces.push(piece);

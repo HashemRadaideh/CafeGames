@@ -15,7 +15,7 @@ export default class Rules {
     this.Pieces = pieces;
   }
 
-  isPieceChangeable(piece: PieceProps): boolean {
+  isPromotable(piece: PieceProps): boolean {
     return piece.type === "Pawn" && piece.row === 0;
   }
 
@@ -26,7 +26,8 @@ export default class Rules {
     return (
       piece.type === "King" &&
       Math.abs(newCol - oldCol) === 2 &&
-      newRow === oldRow
+      newRow === oldRow &&
+      newRow === 0
     );
   }
 
@@ -118,7 +119,7 @@ export default class Rules {
         if (Math.abs(newCol - oldCol) <= 1 && Math.abs(newRow - oldRow) <= 1)
           return true;
 
-        if (Math.abs(newCol - oldCol) === 2 && newRow === oldRow) return true;
+        if (this.isCastling(piece, newCol, newRow)) return true;
 
         return false;
 
