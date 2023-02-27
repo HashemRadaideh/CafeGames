@@ -1,111 +1,104 @@
-import React from "react";
-import { PieceProps, PieceType, Team } from "./pieces";
 import Rules from "./rules";
+import { socket } from "../chess";
+import { PieceProps, PieceType, Team } from "./constants";
 
 export default class Controller {
-  private socket: any;
-  private chessboard: React.RefObject<HTMLDivElement>;
-  private Promotion: React.RefObject<HTMLDivElement>;
-  private activePiece: HTMLElement | null;
-  private setActivePiece: React.Dispatch<
-    React.SetStateAction<HTMLElement | null>
-  >;
-  private PromotePiece: PieceProps | null;
-  private setPromotePiece: React.Dispatch<
-    React.SetStateAction<PieceProps | null>
-  >;
-  // private setTiles: React.Dispatch<React.SetStateAction<JSX.Element[]>>;
-  private setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>;
-  private Pieces: PieceProps[];
-  private GridX: number;
-  private setGridX: React.Dispatch<React.SetStateAction<number>>;
-  private GridY: number;
-  private setGridY: React.Dispatch<React.SetStateAction<number>>;
-  private team: Team;
+  chessboard: React.RefObject<HTMLDivElement>;
+  Promotion: React.RefObject<HTMLDivElement>;
+  activePiece: HTMLElement | null;
+  setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
+  PromotePawn: PieceProps | null;
+  setPromotePawn: React.Dispatch<React.SetStateAction<PieceProps | null>>;
+  setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>;
+  Pieces: PieceProps[];
+  GridX: number;
+  setGridX: React.Dispatch<React.SetStateAction<number>>;
+  GridY: number;
+  setGridY: React.Dispatch<React.SetStateAction<number>>;
+  team: Team;
 
   constructor(
-    socket: any,
     Chessboard: React.RefObject<HTMLDivElement>,
     Promotion: React.RefObject<HTMLDivElement>,
     team: Team,
-    ActivePiece: HTMLElement | null,
-    setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
-    PromotePiece: PieceProps | null,
-    setPromotePiece: React.Dispatch<React.SetStateAction<PieceProps | null>>,
     Pieces: PieceProps[],
     setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>,
-    // setTiles: React.Dispatch<React.SetStateAction<JSX.Element[]>>,
+    ActivePiece: HTMLElement | null,
+    setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
+    PromotePawn: PieceProps | null,
+    setPromotePawn: React.Dispatch<React.SetStateAction<PieceProps | null>>,
     GridX: number,
     setGridX: React.Dispatch<React.SetStateAction<number>>,
     GridY: number,
     setGridY: React.Dispatch<React.SetStateAction<number>>
   ) {
-    this.socket = socket;
     this.chessboard = Chessboard;
 
     this.Promotion = Promotion;
 
     this.team = team;
 
-    this.setPieces = setPieces;
     this.Pieces = Pieces;
-    // this.setTiles = setTiles;
+    this.setPieces = setPieces;
 
     this.activePiece = ActivePiece;
     this.setActivePiece = setActivePiece;
 
-    this.setPromotePiece = setPromotePiece;
-    this.PromotePiece = PromotePiece;
-
-    this.setGridX = setGridX;
-    this.setGridY = setGridY;
+    this.PromotePawn = PromotePawn;
+    this.setPromotePawn = setPromotePawn;
 
     this.GridX = GridX;
+    this.setGridX = setGridX;
+
     this.GridY = GridY;
+    this.setGridY = setGridY;
   }
 
-  // if (
-  //   !window
-  //     .getComputedStyle(element)
-  //     .backgroundImage.includes(`${this.team.toLowerCase}`)
-  // )
-  //   return;
-
-  promotePawn(pieceType: PieceType) {
+  promotePawn(pieceType: PieceType): void {
     const newPieces = this.Pieces.reduce((pieces, piece) => {
       if (
-        this.PromotePiece &&
-        piece.col === this.PromotePiece.col &&
-        piece.row === this.PromotePiece.row
+        this.PromotePawn &&
+        piece.col === this.PromotePawn.col &&
+        piece.row === this.PromotePawn.row
       ) {
         piece.type = pieceType;
         const color = piece.team === "White" ? "white" : "black";
+
         switch (piece.type) {
           case "Bishop":
             piece.img = `./assets/${color}-bishop.png`;
             break;
+
           case "Knight":
             piece.img = `./assets/${color}-knight.png`;
             break;
+
           case "Queen":
             piece.img = `./assets/${color}-queen.png`;
             break;
+
           case "Rook":
             piece.img = `./assets/${color}-rook.png`;
             break;
+
+          default:
+            piece.img = piece.img;
         }
       }
+
       pieces.push(piece);
+
       return pieces;
     }, [] as PieceProps[]);
+
     this.setPieces(newPieces);
 
     this.Promotion.current?.classList.add("hidden");
 
-    this.setPromotePiece(null);
+    this.setPromotePawn(null);
   }
 
-  grabPiece(e: React.MouseEvent) {
+  grabPiece(e: React.MouseEvent): void {
     const element: HTMLElement = e.target as HTMLElement;
     if (!element.classList.contains("piece")) return;
 
@@ -128,7 +121,7 @@ export default class Controller {
     element.style.top = `${y}px`;
   }
 
-  dragPiece(e: React.MouseEvent) {
+  dragPiece(e: React.MouseEvent): void {
     if (!this.activePiece) return;
     if (!this.activePiece.classList.contains("piece")) return;
     if (!this.chessboard.current) return;
@@ -148,10 +141,10 @@ export default class Controller {
     this.activePiece.style.top = `${y < minY ? minY : y > maxY ? maxY : y}px`;
   }
 
-  dropPiece(e: React.MouseEvent) {
+  dropPiece(e: React.MouseEvent): void {
     if (!this.chessboard.current) return;
     const chessboard = this.chessboard.current;
-    const rule = new Rules(this.chessboard, this.team, this.Pieces);
+    const rule = new Rules(this.team, this.Pieces);
 
     const gridX: number = Math.floor((e.clientX - chessboard.offsetLeft) / 100);
     const gridY: number = Math.floor((e.clientY - chessboard.offsetTop) / 100);
@@ -179,13 +172,16 @@ export default class Controller {
             piece.row = gridY;
             if (rule.isPromotable(piece)) {
               this.Promotion.current?.classList.remove("hidden");
-              this.setPromotePiece(piece);
+              this.setPromotePawn(piece);
             }
             if (rule.isCastling(piece, gridX, gridY)) {
-              console.log("Castling");
             }
             pieces.push(piece);
-          } else if (!(piece.col === gridX && piece.row === gridY)) {
+          } else if (piece.col === gridX && piece.row === gridY) {
+            piece.col = 100;
+            piece.row = 100;
+            pieces.push(piece);
+          } else {
             pieces.push(piece);
           }
 
@@ -195,7 +191,7 @@ export default class Controller {
       );
 
       this.setPieces(newPieces);
-      this.socket.emit("players_turn", { pieces: this.Pieces, room: 10 });
+      socket.emit("players_turn", { pieces: this.Pieces, room: 10 });
     }
 
     this.setActivePiece(null);

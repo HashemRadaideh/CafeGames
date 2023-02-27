@@ -1,8 +1,8 @@
+import './App.scss'
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 
 import Chess from './components/Chess/chess'
-import './App.scss'
 
 ReactDOM.createRoot(document.querySelector('#root')!).render(
   <React.StrictMode>

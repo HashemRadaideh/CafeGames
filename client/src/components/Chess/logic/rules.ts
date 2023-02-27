@@ -1,16 +1,10 @@
-import { PieceProps, Team } from "./pieces";
+import { PieceProps, Team } from "./constants";
 
 export default class Rules {
-  private chessboard: React.RefObject<HTMLDivElement>;
-  private team: Team;
-  private Pieces: PieceProps[];
+  team: Team;
+  Pieces: PieceProps[];
 
-  constructor(
-    Chessboard: React.RefObject<HTMLDivElement>,
-    team: Team,
-    pieces: PieceProps[]
-  ) {
-    this.chessboard = Chessboard;
+  constructor(team: Team, pieces: PieceProps[]) {
     this.team = team;
     this.Pieces = pieces;
   }
@@ -31,13 +25,13 @@ export default class Rules {
     );
   }
 
-  isTileOccupied(col: number, row: number) {
+  isTileOccupied(col: number, row: number): boolean {
     return this.Pieces.find((piece) => piece.col === col && piece.row === row)
       ? true
       : false;
   }
 
-  isOpponent(col: number, row: number) {
+  isOpponent(col: number, row: number): boolean {
     return this.Pieces.find(
       (piece) =>
         piece.col === col && piece.row === row && piece.team !== this.team
@@ -109,6 +103,7 @@ export default class Rules {
     const oldRow = piece.row;
     const oldCol = piece.col;
 
+    if (oldCol === newCol && oldRow === newRow) return false;
     if (piece.team !== this.team) return false;
 
     switch (piece.type) {

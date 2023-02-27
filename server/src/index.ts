@@ -2,7 +2,6 @@ import express from 'express';
 import http from 'http';
 import { Server } from 'socket.io'
 import cors from 'cors';
-import { randomInt } from 'crypto';
 
 // Take a port 3000 for running server.
 const PORT: number = 3000;
@@ -22,18 +21,15 @@ const io = new Server(server, {
 });
 
 io.on("connection", (socket) => {
-  console.log(`Connected user: ${socket.id}`)
-
   let team: string = Math.floor(Math.random() * 2) ? 'White' : 'Black';
+
+  socket.on('looking_for_game', (data) => {
+    socket.join(data);
+    socket.emit('create_player', team)
+  })
 
   socket.on('player_created', (data) => {
     team = data === 'White' ? 'Black' : 'White'
-  })
-
-  socket.on('join_room', (data) => {
-    console.log(`User joined: ${socket.id}`)
-    socket.join(data);
-    socket.emit('create_player', team)
   })
 
   socket.on('players_turn', (data) => {
@@ -41,7 +37,8 @@ io.on("connection", (socket) => {
       (pieces: any, piece: any) => {
         piece.col = Math.abs(piece.col - 7);
         piece.row = Math.abs(piece.row - 7);
-        pieces.push(piece);
+        if (piece.col < 8 && piece.col > -1)
+          pieces.push(piece);
         return pieces;
       }, []
     ));
@@ -49,5 +46,4 @@ io.on("connection", (socket) => {
 });
 
 server.listen(PORT, () => {
-  console.log(`Server running...`)
 })

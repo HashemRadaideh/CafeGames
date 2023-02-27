@@ -1,48 +1,66 @@
-import './pieces.scss'
+import Tile from "./tile";
+import { PieceProps, PieceType, Team } from "./logic/constants";
 
-const pieceType = {
-  Bishop: 'bishop',
-  King: 'king',
-  Knight: 'knight',
-  Pawn: 'pawn',
-  Queen: 'queen',
-  Rook: 'rook',
-  None: 'None'
-} as const;
+export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[] {
+  const HAxis: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
+  const VAxis: string[] = ["1", "2", "3", "4", "5", "6", "7", "8"];
+  const Tiles: JSX.Element[] = [];
 
-export type PieceType = keyof typeof pieceType
+  for (const [row] of HAxis.entries()) {
+    for (const [col] of VAxis.entries()) {
+      let Image: string = "";
+      let Type: PieceType = "None";
+      let Team: Team = "None";
 
-const TeamType = {
-  Black: 'black',
-  White: 'white',
-  None: 'None'
-} as const;
+      Pieces.forEach((piece) => {
+        if (piece.row === row && piece.col === col) {
+          Image = piece.img;
 
-export type Team = keyof typeof TeamType
+          if (piece.img.substring(9, 14) === "black") {
+            Team = "Black";
+          } else {
+            Team = "White";
+          }
 
-export interface PieceProps {
-  img: string;
-  col: number;
-  row: number;
-  team: Team;
-  type: PieceType;
-}
+          if (piece.img.substring(15, 19) === "pawn") {
+            Type = "Pawn";
+          } else if (piece.img.substring(15, 19) === "rook") {
+            Type = "Rook";
+          } else if (piece.img.substring(15, 19) === "knig") {
+            Type = "Knight";
+          } else if (piece.img.substring(15, 19) === "bish") {
+            Type = "Bishop";
+          } else if (piece.img.substring(15, 19) === "quee") {
+            Type = "Queen";
+          } else {
+            Type == "King";
+          }
+        }
+      });
 
-export default function Piece({ img }: PieceProps) {
-  if (img === "") return (<></>);
-  return (
-    <div className="piece" style={{ backgroundImage: `url(${img}` }} >
-    </div>
-  );
+      Tiles.push(
+        <Tile
+          team={team}
+          row={row}
+          col={col}
+          piece={{ img: Image, row: row, col: col, type: Type, team: Team }}
+          key={`(${col}, ${row})`
+          }
+        />
+      );
+    }
+  }
+
+  return Tiles;
 }
 
 export function InitializePieces(team: Team) {
   const pieces: PieceProps[] = [];
 
-  const opponent = team === 'White' ? 'Black' : 'White';
-  const player = team === 'White' ? 'White' : 'Black';
-  const kingCol = team === 'White' ? 4 : 3;
-  const queenCol = team === 'White' ? 3 : 4;
+  const opponent = team === "White" ? "Black" : "White";
+  const player = team === "White" ? "White" : "Black";
+  const kingCol = team === "White" ? 4 : 3;
+  const queenCol = team === "White" ? 3 : 4;
 
   // Opponent pieces
   // Bishop
@@ -51,16 +69,16 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 2,
     team: opponent,
-    type: 'Bishop',
-  })
+    type: "Bishop",
+  });
 
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-bishop.png`,
     row: 0,
     col: 5,
     team: opponent,
-    type: 'Bishop',
-  })
+    type: "Bishop",
+  });
 
   // Kings
   pieces.push({
@@ -68,8 +86,8 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: kingCol,
     team: opponent,
-    type: 'King',
-  })
+    type: "King",
+  });
 
   // Knights
   pieces.push({
@@ -77,16 +95,16 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 6,
     team: opponent,
-    type: 'Knight',
-  })
+    type: "Knight",
+  });
 
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-knight.png`,
     row: 0,
     col: 1,
     team: opponent,
-    type: 'Knight',
-  })
+    type: "Knight",
+  });
 
   // Pawns
   for (let col = 0; col < 8; col++) {
@@ -95,8 +113,8 @@ export function InitializePieces(team: Team) {
       row: 1,
       col,
       team: opponent,
-      type: 'Pawn',
-    })
+      type: "Pawn",
+    });
   }
 
   // Queens
@@ -105,8 +123,8 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: queenCol,
     team: opponent,
-    type: 'Queen',
-  })
+    type: "Queen",
+  });
 
   // Rooks
   pieces.push({
@@ -114,16 +132,16 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 0,
     team: opponent,
-    type: 'Rook',
-  })
+    type: "Rook",
+  });
 
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-rook.png`,
     row: 0,
     col: 7,
     team: opponent,
-    type: 'Rook',
-  })
+    type: "Rook",
+  });
 
   // Player pieces
   //Bishop
@@ -132,16 +150,16 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 2,
     team: player,
-    type: 'Bishop',
-  })
+    type: "Bishop",
+  });
 
   pieces.push({
     img: `./assets/${player.toLowerCase()}-bishop.png`,
     row: 7,
     col: 5,
     team: player,
-    type: 'Bishop',
-  })
+    type: "Bishop",
+  });
 
   // King
   pieces.push({
@@ -149,8 +167,8 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: kingCol,
     team: player,
-    type: 'King',
-  })
+    type: "King",
+  });
 
   // Knight
   pieces.push({
@@ -158,16 +176,16 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 6,
     team: player,
-    type: 'Knight',
-  })
+    type: "Knight",
+  });
 
   pieces.push({
     img: `./assets/${player.toLowerCase()}-knight.png`,
     row: 7,
     col: 1,
     team: player,
-    type: 'Knight',
-  })
+    type: "Knight",
+  });
 
   // Rooks
   pieces.push({
@@ -175,16 +193,16 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 0,
     team: player,
-    type: 'Rook',
-  })
+    type: "Rook",
+  });
 
   pieces.push({
     img: `./assets/${player.toLowerCase()}-rook.png`,
     row: 7,
     col: 7,
     team: player,
-    type: 'Rook',
-  })
+    type: "Rook",
+  });
 
   // Pawns
   for (let col = 0; col < 8; col++) {
@@ -193,8 +211,8 @@ export function InitializePieces(team: Team) {
       row: 6,
       col,
       team: player,
-      type: 'Pawn',
-    })
+      type: "Pawn",
+    });
   }
 
   // Queen
@@ -203,8 +221,8 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: queenCol,
     team: player,
-    type: 'Queen',
-  })
+    type: "Queen",
+  });
 
   return pieces;
 }
