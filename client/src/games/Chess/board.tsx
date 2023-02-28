@@ -1,14 +1,17 @@
 import './board.scss';
-import { socket } from './chess'
+import { socket } from './index'
 import { useRef, useState, useEffect } from 'react';
 import Controller from './logic/controller';
 import { PieceProps, Team } from './logic/constants';
 import { InitializePieces, InitializeTiles } from './initial';
 
-export default function Board({ team }: { team: Team }): JSX.Element {
+export default function Board({ team, pieces }: { team: Team, pieces: PieceProps[] }): JSX.Element {
   useEffect(() => {
     setPlayerTeam(team);
-    setPieces(InitializePieces(team));
+    if (!Array.isArray(pieces) || !pieces.length)
+      setPieces(InitializePieces(team));
+    else
+      setPieces(pieces);
   }, [team]);
 
   useEffect(() => {

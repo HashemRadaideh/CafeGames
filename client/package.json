@@ -1,13 +1,13 @@
 {
-  "name": "temp",
+  "name": "CafeGames",
   "private": true,
   "version": "1.0.0",
-  "description": "template",
-  "author": "temp",
+  "description": "",
+  "author": "Hashem Al-Radaideh",
   "license": "MIT",
   "type": "module",
   "scripts": {
-    "dev": "vite --host",
+    "dev": "vite build && vite --host",
     "build": "vite build",
     "preview": "vite preview"
   },
@@ -28,6 +28,7 @@
   },
   "dependencies": {
     "@types/node": "^18.14.2",
+    "react-router-dom": "^6.8.2",
     "socket.io-client": "^4.6.1"
   }
 }
