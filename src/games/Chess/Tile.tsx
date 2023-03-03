@@ -1,5 +1,5 @@
-import './tile.scss'
-import Piece from './piece';
+import './style/Tile.scss'
+import Piece from './Piece';
 import { TileProps } from './logic/constants';
 
 export default function Tile({ team, row, col, color1, color2, piece }: TileProps): JSX.Element {
@@ -22,7 +22,7 @@ export default function Tile({ team, row, col, color1, color2, piece }: TileProp
           row={piece.row}
           col={piece.col}
           team={piece.team}
-          type={piece.type}
+          rank={piece.rank}
         />
       }
     </div>

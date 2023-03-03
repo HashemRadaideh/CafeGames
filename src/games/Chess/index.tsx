@@ -1,7 +1,7 @@
-import './index.scss'
+import './style/index.scss'
 import { useEffect, useState } from 'react';
 import io from 'socket.io-client';
-import Board from './board'
+import Board from './Board'
 import { PieceProps, Team } from './logic/constants';
 
 export const socket = io("http://192.168.1.26:3000");

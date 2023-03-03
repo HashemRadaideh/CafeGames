@@ -1,0 +1,16 @@
+#chess {
+  .tile {
+    display: grid;
+    place-content: center;
+    width: 100px;
+    height: 100px;
+  }
+
+  .white-tile {
+    background-color: #c3c3c3;
+  }
+
+  .black-tile {
+    background-color: #232323;
+  }
+}

@@ -1,4 +1,4 @@
-const pieceType = {
+const Rank = {
   Bishop: "bishop",
   King: "king",
   Knight: "knight",
@@ -8,7 +8,7 @@ const pieceType = {
   None: "None",
 } as const;
 
-export type PieceType = keyof typeof pieceType;
+export type rank = keyof typeof Rank;
 
 const TeamType = {
   Black: "black",
@@ -23,7 +23,7 @@ export interface PieceProps {
   col: number;
   row: number;
   team: Team;
-  type: PieceType;
+  rank: rank;
 }
 
 export interface TileProps {

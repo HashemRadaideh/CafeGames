@@ -1,5 +1,5 @@
-import Tile from "./tile";
-import { PieceProps, PieceType, Team } from "./logic/constants";
+import Tile from "../Tile";
+import { PieceProps, rank, Team } from "./constants";
 
 export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[] {
   const HAxis: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
@@ -9,7 +9,7 @@ export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[]
   for (const [row] of HAxis.entries()) {
     for (const [col] of VAxis.entries()) {
       let Image: string = "";
-      let Type: PieceType = "None";
+      let Rank: rank = "None";
       let Team: Team = "None";
 
       Pieces.forEach((piece) => {
@@ -23,17 +23,17 @@ export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[]
           }
 
           if (piece.img.substring(15, 19) === "pawn") {
-            Type = "Pawn";
+            Rank = "Pawn";
           } else if (piece.img.substring(15, 19) === "rook") {
-            Type = "Rook";
+            Rank = "Rook";
           } else if (piece.img.substring(15, 19) === "knig") {
-            Type = "Knight";
+            Rank = "Knight";
           } else if (piece.img.substring(15, 19) === "bish") {
-            Type = "Bishop";
+            Rank = "Bishop";
           } else if (piece.img.substring(15, 19) === "quee") {
-            Type = "Queen";
+            Rank = "Queen";
           } else {
-            Type == "King";
+            Rank == "King";
           }
         }
       });
@@ -43,7 +43,7 @@ export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[]
           team={team}
           row={row}
           col={col}
-          piece={{ img: Image, row: row, col: col, type: Type, team: Team }}
+          piece={{ img: Image, row: row, col: col, rank: Rank, team: Team }}
           key={`(${col}, ${row})`
           }
         />
@@ -69,7 +69,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 2,
     team: opponent,
-    type: "Bishop",
+    rank: "Bishop",
   });
 
   pieces.push({
@@ -77,7 +77,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 5,
     team: opponent,
-    type: "Bishop",
+    rank: "Bishop",
   });
 
   // Kings
@@ -86,7 +86,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: kingCol,
     team: opponent,
-    type: "King",
+    rank: "King",
   });
 
   // Knights
@@ -95,7 +95,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 6,
     team: opponent,
-    type: "Knight",
+    rank: "Knight",
   });
 
   pieces.push({
@@ -103,7 +103,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 1,
     team: opponent,
-    type: "Knight",
+    rank: "Knight",
   });
 
   // Pawns
@@ -113,7 +113,7 @@ export function InitializePieces(team: Team) {
       row: 1,
       col,
       team: opponent,
-      type: "Pawn",
+      rank: "Pawn",
     });
   }
 
@@ -123,7 +123,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: queenCol,
     team: opponent,
-    type: "Queen",
+    rank: "Queen",
   });
 
   // Rooks
@@ -132,7 +132,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 0,
     team: opponent,
-    type: "Rook",
+    rank: "Rook",
   });
 
   pieces.push({
@@ -140,7 +140,7 @@ export function InitializePieces(team: Team) {
     row: 0,
     col: 7,
     team: opponent,
-    type: "Rook",
+    rank: "Rook",
   });
 
   // Player pieces
@@ -150,7 +150,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 2,
     team: player,
-    type: "Bishop",
+    rank: "Bishop",
   });
 
   pieces.push({
@@ -158,7 +158,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 5,
     team: player,
-    type: "Bishop",
+    rank: "Bishop",
   });
 
   // King
@@ -167,7 +167,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: kingCol,
     team: player,
-    type: "King",
+    rank: "King",
   });
 
   // Knight
@@ -176,7 +176,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 6,
     team: player,
-    type: "Knight",
+    rank: "Knight",
   });
 
   pieces.push({
@@ -184,7 +184,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 1,
     team: player,
-    type: "Knight",
+    rank: "Knight",
   });
 
   // Rooks
@@ -193,7 +193,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 0,
     team: player,
-    type: "Rook",
+    rank: "Rook",
   });
 
   pieces.push({
@@ -201,7 +201,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: 7,
     team: player,
-    type: "Rook",
+    rank: "Rook",
   });
 
   // Pawns
@@ -211,7 +211,7 @@ export function InitializePieces(team: Team) {
       row: 6,
       col,
       team: player,
-      type: "Pawn",
+      rank: "Pawn",
     });
   }
 
@@ -221,7 +221,7 @@ export function InitializePieces(team: Team) {
     row: 7,
     col: queenCol,
     team: player,
-    type: "Queen",
+    rank: "Queen",
   });
 
   return pieces;

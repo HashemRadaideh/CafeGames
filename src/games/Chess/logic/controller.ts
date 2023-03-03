@@ -1,6 +1,6 @@
 import Rules from "./rules";
 import { socket } from "../index";
-import { PieceProps, PieceType, Team } from "./constants";
+import { PieceProps, rank, Team } from "./constants";
 
 export default class Controller {
   chessboard: React.RefObject<HTMLDivElement>;
@@ -54,17 +54,17 @@ export default class Controller {
     this.setGridY = setGridY;
   }
 
-  promotePawn(pieceType: PieceType): void {
+  promotePawn(rank: rank): void {
     const newPieces = this.Pieces.reduce((pieces, piece) => {
       if (
         this.PromotePawn &&
         piece.col === this.PromotePawn.col &&
         piece.row === this.PromotePawn.row
       ) {
-        piece.type = pieceType;
+        piece.rank = rank;
         const color = piece.team === "White" ? "white" : "black";
 
-        switch (piece.type) {
+        switch (piece.rank) {
           case "Bishop":
             piece.img = `./assets/${color}-bishop.png`;
             break;

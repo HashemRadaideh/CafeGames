@@ -10,7 +10,7 @@ export default class Rules {
   }
 
   isPromotable(piece: PieceProps): boolean {
-    return piece.type === "Pawn" && piece.row === 0;
+    return piece.rank === "Pawn" && piece.row === 0;
   }
 
   isCastling(piece: PieceProps, newCol: number, newRow: number): boolean {
@@ -18,7 +18,7 @@ export default class Rules {
     const oldCol = piece.col;
 
     return (
-      piece.type === "King" &&
+      piece.rank === "King" &&
       Math.abs(newCol - oldCol) === 2 &&
       newRow === oldRow &&
       newRow === 0
@@ -106,7 +106,7 @@ export default class Rules {
     if (oldCol === newCol && oldRow === newRow) return false;
     if (piece.team !== this.team) return false;
 
-    switch (piece.type) {
+    switch (piece.rank) {
       case "Bishop":
         return this.isDiagonal(oldCol, oldRow, newCol, newRow);
 
@@ -158,7 +158,7 @@ export default class Rules {
           // Check for En Passant capture
           const lastMove = this.Pieces[this.Pieces.length - 1];
           if (
-            lastMove.type === "Pawn" &&
+            lastMove.rank === "Pawn" &&
             lastMove.row === oldRow &&
             (lastMove.col === oldCol + 1 || lastMove.col === oldCol - 1) &&
             lastMove.row === newRow + 1

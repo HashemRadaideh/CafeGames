@@ -1,9 +1,9 @@
-import './board.scss';
+import './style/Board.scss';
 import { socket } from './index'
 import { useRef, useState, useEffect } from 'react';
 import Controller from './logic/controller';
 import { PieceProps, Team } from './logic/constants';
-import { InitializePieces, InitializeTiles } from './initial';
+import { InitializePieces, InitializeTiles } from './logic/initial';
 
 export default function Board({ team, pieces }: { team: Team, pieces: PieceProps[] }): JSX.Element {
   useEffect(() => {
