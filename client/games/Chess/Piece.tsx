@@ -1,4 +1,4 @@
-import './style/Piece.scss'
+import './styles/Piece.scss'
 import { PieceProps } from './logic/constants';
 
 export default function Piece({ img }: PieceProps): JSX.Element {

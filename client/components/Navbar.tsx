@@ -1,4 +1,4 @@
-import './Navbar.scss'
+import './styles/Navbar.scss'
 import { Link, useMatch, useResolvedPath } from 'react-router-dom';
 
 function Page({ to, children, ...props }: { to: string, children: any }): JSX.Element {

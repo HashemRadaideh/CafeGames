@@ -1,10 +1,9 @@
 import './App.scss';
-import Chessboard from './games/Chess';
 import Navbar from './components/Navbar'
 import * as Page from './pages'
 import { Route, Routes } from 'react-router-dom';
 
-export default function App() {
+export default function App(): JSX.Element {
   return (
     <>
       <Navbar />
@@ -14,7 +13,7 @@ export default function App() {
           <Route path="/about" element={<Page.About />} />
           <Route path="/games" element={<Page.Games />} />
           <Route path="/missing" element={<Page.Missing />} />
-          <Route path="/chess" element={<Chessboard />} />
+          <Route path="/api" element={<Page.Missing />} />
         </Routes>
       </div>
     </>

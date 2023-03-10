@@ -1,5 +1,5 @@
 import Rules from "./rules";
-import { socket } from "../index";
+import { socket } from "../App";
 import { PieceProps, rank, Team } from "./constants";
 
 export default class Controller {

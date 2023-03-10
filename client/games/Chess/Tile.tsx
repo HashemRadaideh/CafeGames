@@ -1,8 +1,8 @@
-import './style/Tile.scss'
+import './styles/Tile.scss'
 import Piece from './Piece';
 import { TileProps } from './logic/constants';
 
-export default function Tile({ team, row, col, color1, color2, piece }: TileProps): JSX.Element {
+export default function Tile({ row, col, color1, color2, piece }: TileProps): JSX.Element {
   let choice1: string = "white";
   let choice2: string = "black";
 

@@ -1,23 +1,36 @@
 import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react";
+import react from "@vitejs/plugin-react-swc";
+import { resolve } from "path";
+
+const root = resolve(__dirname, "client");
+const outDir = resolve(__dirname, "server/views");
+const publicDir = resolve(__dirname, "client/public");
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  // prevent vite from obscufing rust errors
+  plugins: [react()],
+  root,
+  publicDir,
   clearScreen: false,
-  // Tauri expects a fixed port, fail if that port is not available
   server: {
     strictPort: true,
+    host: "0.0.0.0",
   },
   // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`
   // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` AND `TAURI_DEBUG`
   // env variables
   envPrefix: ["VITE_", "TAURI_"],
   build: {
+    outDir,
+    emptyOutDir: true,
     target: ["es2021", "chrome100", "safari13"],
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
-    // sourcemap: !!process.env.TAURI_DEBUG,
-    sourcemap: true,
+    sourcemap: !!process.env.TAURI_DEBUG,
+    rollupOptions: {
+      input: {
+        index: resolve(root, "index.html"),
+        chess: resolve(root, "games/Chess/index.html"),
+      },
+    },
   },
-  plugins: [react()],
 });

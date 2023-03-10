@@ -1,5 +1,5 @@
-import './style/Board.scss';
-import { socket } from './index'
+import './styles/Board.scss';
+import { socket } from './App'
 import { useRef, useState, useEffect } from 'react';
 import Controller from './logic/controller';
 import { PieceProps, Team } from './logic/constants';
@@ -32,7 +32,7 @@ export default function Board({ team, pieces }: { team: Team, pieces: PieceProps
   const [GridX, setGridX] = useState(0);
   const [GridY, setGridY] = useState(0);
 
-  const con: Controller = new Controller(
+  const controller: Controller = new Controller(
     Chessboard, Promotion, team,
     Pieces, setPieces,
     ActivePiece, setActivePiece,
@@ -45,17 +45,17 @@ export default function Board({ team, pieces }: { team: Team, pieces: PieceProps
     <>
       <div id="promotion" className='hidden' ref={Promotion}>
         <div className='body'>
-          <img onClick={() => con.promotePawn('Bishop')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-bishop.png`} />
-          <img onClick={() => con.promotePawn('Knight')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-knight.png`} />
-          <img onClick={() => con.promotePawn('Queen')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-queen.png`} />
-          <img onClick={() => con.promotePawn('Rook')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-rook.png`} />
+          <img onClick={() => controller.promotePawn('Bishop')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-bishop.png`} />
+          <img onClick={() => controller.promotePawn('Knight')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-knight.png`} />
+          <img onClick={() => controller.promotePawn('Queen')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-queen.png`} />
+          <img onClick={() => controller.promotePawn('Rook')} src={`./assets/${PlayersTeam === 'White' ? 'white' : 'black'}-rook.png`} />
         </div>
       </div>
       <div className="board"
         ref={Chessboard}
-        onMouseMove={e => con.dragPiece(e)}
-        onMouseDown={e => con.grabPiece(e)}
-        onMouseUp={e => con.dropPiece(e)}>
+        onMouseMove={e => controller.dragPiece(e)}
+        onMouseDown={e => controller.grabPiece(e)}
+        onMouseUp={e => controller.dropPiece(e)}>
         {Board}
       </div>
     </>

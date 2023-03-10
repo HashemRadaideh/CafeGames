@@ -1,4 +1,4 @@
-import './Missing.scss'
+import './styles/Missing.scss'
 
 export default function Missing() {
 

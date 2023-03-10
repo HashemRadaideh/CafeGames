@@ -1,4 +1,4 @@
-import './Games.scss'
+import './styles/Games.scss'
 
 export default function Games() {
 
