@@ -9,16 +9,16 @@
   }
 }
 
+.hidden {
+  display: none;
+}
+
 #promotion {
   position: absolute;
   top: 0px;
   right: 0px;
   left: 0px;
   bottom: 0px;
-
-  .hidden {
-    display: none;
-  }
 
   .body {
     display: flex;

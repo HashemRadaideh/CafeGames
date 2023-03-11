@@ -4,18 +4,11 @@ import { root } from "..";
 
 export const home = express.Router();
 
-home.get("/", (_req, res): void => {
-  res.sendFile(path.resolve(root, "index.html"));
-});
-
-home.post("/home", (_req, res): void => {
-  res.send("Hello, world!");
-});
-
-home.put("/home", (_req, res): void => {
-  res.send("Hello, world!");
-});
-
-home.delete("/home", (_req, res): void => {
-  res.send("Hello, world!");
-});
+home
+  .route("/")
+  .get((req, res): void => {
+    res.sendFile(path.resolve(root, "index.html"));
+  })
+  .post((req, res): void => {})
+  .put((req, res): void => {})
+  .delete((req, res): void => {});

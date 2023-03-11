@@ -1,13 +1,16 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import { resolve } from "path";
+import { WatcherOptions } from "rollup";
+
+const watch: WatcherOptions = {};
 
 const root = resolve(__dirname, "client");
 const outDir = resolve(__dirname, "server/views");
 const publicDir = resolve(__dirname, "client/public");
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  mode: "development", // production
   plugins: [react()],
   root,
   publicDir,
@@ -16,11 +19,14 @@ export default defineConfig({
     strictPort: true,
     host: "0.0.0.0",
   },
-  // to make use of `TAURI_PLATFORM`, `TAURI_ARCH`, `TAURI_FAMILY`
-  // `TAURI_PLATFORM_VERSION`, `TAURI_PLATFORM_TYPE` AND `TAURI_DEBUG`
-  // env variables
   envPrefix: ["VITE_", "TAURI_"],
+  resolve: {
+    alias: {
+      "@": root,
+    },
+  },
   build: {
+    watch,
     outDir,
     emptyOutDir: true,
     target: ["es2021", "chrome100", "safari13"],

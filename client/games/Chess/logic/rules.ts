@@ -10,12 +10,12 @@ export default class Rules {
   }
 
   isPromotable(piece: PieceProps): boolean {
-    return piece.rank === "Pawn" && piece.row === 0;
+    return piece.rank === "Pawn" && piece.pos.row === 0;
   }
 
   isCastling(piece: PieceProps, newCol: number, newRow: number): boolean {
-    const oldRow = piece.row;
-    const oldCol = piece.col;
+    const oldRow = piece.pos.row;
+    const oldCol = piece.pos.col;
 
     return (
       piece.rank === "King" &&
@@ -26,7 +26,9 @@ export default class Rules {
   }
 
   isTileOccupied(col: number, row: number): boolean {
-    return this.Pieces.find((piece) => piece.col === col && piece.row === row)
+    return this.Pieces.find(
+      (piece) => piece.pos.col === col && piece.pos.row === row
+    )
       ? true
       : false;
   }
@@ -34,7 +36,9 @@ export default class Rules {
   isOpponent(col: number, row: number): boolean {
     return this.Pieces.find(
       (piece) =>
-        piece.col === col && piece.row === row && piece.team !== this.team
+        piece.pos.col === col &&
+        piece.pos.row === row &&
+        piece.team !== this.team
     )
       ? true
       : false;
@@ -100,8 +104,8 @@ export default class Rules {
   }
 
   isMoveValid(piece: PieceProps, newCol: number, newRow: number): boolean {
-    const oldRow = piece.row;
-    const oldCol = piece.col;
+    const oldRow = piece.pos.row;
+    const oldCol = piece.pos.col;
 
     if (oldCol === newCol && oldRow === newRow) return false;
     if (piece.team !== this.team) return false;
@@ -159,9 +163,10 @@ export default class Rules {
           const lastMove = this.Pieces[this.Pieces.length - 1];
           if (
             lastMove.rank === "Pawn" &&
-            lastMove.row === oldRow &&
-            (lastMove.col === oldCol + 1 || lastMove.col === oldCol - 1) &&
-            lastMove.row === newRow + 1
+            lastMove.pos.row === oldRow &&
+            (lastMove.pos.col === oldCol + 1 ||
+              lastMove.pos.col === oldCol - 1) &&
+            lastMove.pos.row === newRow + 1
           ) {
             return true;
           }

@@ -1,13 +1,9 @@
-import './styles/Missing.scss'
+import "./styles/Missing.scss";
 
-export default function Missing() {
-
+export default function Missing(): JSX.Element {
   return (
     <>
-      <div id="Missing">
-        Missing
-      </div>
+      <div id="Missing">Missing</div>
     </>
   );
 }
-

@@ -2,7 +2,7 @@
   "compilerOptions": {
     "composite": true,
     "module": "commonjs",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true
   },

@@ -1,7 +1,10 @@
 import Tile from "../Tile";
 import { PieceProps, rank, Team } from "./constants";
 
-export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[] {
+export function InitializeTiles(
+  Pieces: PieceProps[],
+  team: Team
+): JSX.Element[] {
   const HAxis: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
   const VAxis: string[] = ["1", "2", "3", "4", "5", "6", "7", "8"];
   const Tiles: JSX.Element[] = [];
@@ -13,7 +16,7 @@ export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[]
       let Team: Team = "None";
 
       Pieces.forEach((piece) => {
-        if (piece.row === row && piece.col === col) {
+        if (piece.pos.row === row && piece.pos.col === col) {
           Image = piece.img;
 
           if (piece.img.substring(9, 14) === "black") {
@@ -41,11 +44,9 @@ export function InitializeTiles(Pieces: PieceProps[], team: Team): JSX.Element[]
       Tiles.push(
         <Tile
           team={team}
-          row={row}
-          col={col}
-          piece={{ img: Image, row: row, col: col, rank: Rank, team: Team }}
-          key={`(${col}, ${row})`
-          }
+          pos={{ row, col }}
+          piece={{ img: Image, pos: { col, row }, rank: Rank, team: Team }}
+          key={`(${col}, ${row})`}
         />
       );
     }
@@ -66,16 +67,14 @@ export function InitializePieces(team: Team) {
   // Bishop
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-bishop.png`,
-    row: 0,
-    col: 2,
+    pos: { col: 2, row: 0 },
     team: opponent,
     rank: "Bishop",
   });
 
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-bishop.png`,
-    row: 0,
-    col: 5,
+    pos: { col: 5, row: 0 },
     team: opponent,
     rank: "Bishop",
   });
@@ -83,8 +82,7 @@ export function InitializePieces(team: Team) {
   // Kings
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-king.png`,
-    row: 0,
-    col: kingCol,
+    pos: { col: kingCol, row: 0 },
     team: opponent,
     rank: "King",
   });
@@ -92,16 +90,14 @@ export function InitializePieces(team: Team) {
   // Knights
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-knight.png`,
-    row: 0,
-    col: 6,
+    pos: { col: 6, row: 0 },
     team: opponent,
     rank: "Knight",
   });
 
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-knight.png`,
-    row: 0,
-    col: 1,
+    pos: { col: 1, row: 0 },
     team: opponent,
     rank: "Knight",
   });
@@ -110,8 +106,7 @@ export function InitializePieces(team: Team) {
   for (let col = 0; col < 8; col++) {
     pieces.push({
       img: `./assets/${opponent.toLowerCase()}-pawn.png`,
-      row: 1,
-      col,
+      pos: { col, row: 1 },
       team: opponent,
       rank: "Pawn",
     });
@@ -120,8 +115,7 @@ export function InitializePieces(team: Team) {
   // Queens
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-queen.png`,
-    row: 0,
-    col: queenCol,
+    pos: { col: queenCol, row: 0 },
     team: opponent,
     rank: "Queen",
   });
@@ -129,16 +123,14 @@ export function InitializePieces(team: Team) {
   // Rooks
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-rook.png`,
-    row: 0,
-    col: 0,
+    pos: { col: 0, row: 0 },
     team: opponent,
     rank: "Rook",
   });
 
   pieces.push({
     img: `./assets/${opponent.toLowerCase()}-rook.png`,
-    row: 0,
-    col: 7,
+    pos: { col: 7, row: 0 },
     team: opponent,
     rank: "Rook",
   });
@@ -147,16 +139,14 @@ export function InitializePieces(team: Team) {
   //Bishop
   pieces.push({
     img: `./assets/${player.toLowerCase()}-bishop.png`,
-    row: 7,
-    col: 2,
+    pos: { col: 2, row: 7 },
     team: player,
     rank: "Bishop",
   });
 
   pieces.push({
     img: `./assets/${player.toLowerCase()}-bishop.png`,
-    row: 7,
-    col: 5,
+    pos: { col: 5, row: 7 },
     team: player,
     rank: "Bishop",
   });
@@ -164,8 +154,7 @@ export function InitializePieces(team: Team) {
   // King
   pieces.push({
     img: `./assets/${player.toLowerCase()}-king.png`,
-    row: 7,
-    col: kingCol,
+    pos: { col: kingCol, row: 7 },
     team: player,
     rank: "King",
   });
@@ -173,16 +162,14 @@ export function InitializePieces(team: Team) {
   // Knight
   pieces.push({
     img: `./assets/${player.toLowerCase()}-knight.png`,
-    row: 7,
-    col: 6,
+    pos: { col: 6, row: 7 },
     team: player,
     rank: "Knight",
   });
 
   pieces.push({
     img: `./assets/${player.toLowerCase()}-knight.png`,
-    row: 7,
-    col: 1,
+    pos: { col: 1, row: 7 },
     team: player,
     rank: "Knight",
   });
@@ -190,16 +177,14 @@ export function InitializePieces(team: Team) {
   // Rooks
   pieces.push({
     img: `./assets/${player.toLowerCase()}-rook.png`,
-    row: 7,
-    col: 0,
+    pos: { col: 0, row: 7 },
     team: player,
     rank: "Rook",
   });
 
   pieces.push({
     img: `./assets/${player.toLowerCase()}-rook.png`,
-    row: 7,
-    col: 7,
+    pos: { col: 7, row: 7 },
     team: player,
     rank: "Rook",
   });
@@ -208,8 +193,7 @@ export function InitializePieces(team: Team) {
   for (let col = 0; col < 8; col++) {
     pieces.push({
       img: `./assets/${player.toLowerCase()}-pawn.png`,
-      row: 6,
-      col,
+      pos: { col, row: 6 },
       team: player,
       rank: "Pawn",
     });
@@ -218,8 +202,7 @@ export function InitializePieces(team: Team) {
   // Queen
   pieces.push({
     img: `./assets/${player.toLowerCase()}-queen.png`,
-    row: 7,
-    col: queenCol,
+    pos: { col: queenCol, row: 7 },
     team: player,
     rank: "Queen",
   });

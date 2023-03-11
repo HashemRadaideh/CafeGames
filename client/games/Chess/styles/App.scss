@@ -1,7 +1,11 @@
+body {
+  margin: 0;
+}
+
 #chess {
   display: grid;
   place-content: center;
-  background-color: #353535;
+  background-color: #232323;
   height: 100vh;
   width: 100vw;
 }

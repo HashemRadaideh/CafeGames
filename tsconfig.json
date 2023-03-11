@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
-    "baseUrl": ".",
+    "baseUrl": "./",
     "rootDir": "./",
-    "outDir": "./build",
+    "outDir": "dist",
     "target": "es6",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable"],
@@ -17,12 +17,14 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "module": "commonjs",
-    "moduleResolution": "Node",
+    "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": false,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "sourceMap": true
   },
+  "lib": ["es2015"],
   "include": ["client", "server"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

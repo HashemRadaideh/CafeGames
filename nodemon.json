@@ -2,5 +2,5 @@
   "watch": ["server"],
   "ext": "ts,json",
   "ignore": ["server/**/*.spec.ts"],
-  "exec": "yarn build && ts-node ./server/index.ts"
+  "exec": "ts-node ./server/index.ts"
 }

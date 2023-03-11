@@ -20,17 +20,20 @@ export type Team = keyof typeof TeamType;
 
 export interface PieceProps {
   img: string;
-  col: number;
-  row: number;
+  pos: Position;
   team: Team;
   rank: rank;
 }
 
 export interface TileProps {
   team: Team;
-  col: number;
-  row: number;
+  pos: Position;
   color1?: string;
   color2?: string;
   piece?: PieceProps;
+}
+
+export interface Position {
+  col: number;
+  row: number;
 }

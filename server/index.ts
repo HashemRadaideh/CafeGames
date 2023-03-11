@@ -8,8 +8,13 @@ import { Server } from "socket.io";
 import { v4 as uuidv4 } from "uuid";
 import cors from "cors";
 import path from "path";
+import * as route from "./routes";
 
 const app: express.Application = express();
+
+export const root = path.join(__dirname, "views");
+app.use(express.json());
+app.use(express.static(root));
 
 app.use(
   cors({
@@ -18,8 +23,9 @@ app.use(
   })
 );
 
-export const root = path.join(__dirname, "views");
-app.use(express.static(root));
+app.use(route.home);
+app.use(route.api);
+app.use(route.chess);
 
 const server = http.createServer(app);
 
@@ -29,12 +35,6 @@ const io = new Server(server, {
     methods: ["GET", "POST"],
   },
 });
-
-import * as route from "./routes";
-
-app.use(route.api);
-app.use(route.home);
-app.use(route.chess);
 
 interface AvailableRoom {
   users: string[];
@@ -46,19 +46,20 @@ let team: string = Math.floor(Math.random() * 2) ? "White" : "Black";
 let Pieces: any[] = [];
 
 io.on("connection", (socket) => {
-  socket.on("looking_for_game", (userId: string) => {
-    let roomId: string;
-    const rooms = Object.keys(availableRooms);
-    if (rooms.length === 0) {
-      // Create a new room if no rooms are available
-      roomId = uuidv4();
-      availableRooms[roomId] = { users: [userId] };
-    } else {
-      // Join the first available room
-      roomId = rooms[0];
-      availableRooms[roomId].users.push(userId);
-    }
-    socket.join(roomId);
+  socket.on("looking_for_game", (data /*userId: string*/) => {
+    // let roomId: string;
+    // const rooms = Object.keys(availableRooms);
+    // if (rooms.length === 0) {
+    //   // Create a new room if no rooms are available
+    //   roomId = uuidv4();
+    //   availableRooms[roomId] = { users: [userId] };
+    // } else {
+    //   // Join the first available room
+    //   roomId = rooms[0];
+    //   availableRooms[roomId].users.push(userId);
+    // }
+    // socket.join(roomId);
+    socket.join(data);
     socket.emit("create_player", { team: team, pieces: Pieces });
     // socket.to(roomId).broadcast.emit("userConnected", userId);
   });
@@ -96,6 +97,6 @@ io.on("connection", (socket) => {
   });
 });
 
-server.listen(process.env.PORT, () => {
+server.listen(process.env.PORT || 5000, () => {
   console.log(`Server is running on port ${process.env.PORT}`);
 });

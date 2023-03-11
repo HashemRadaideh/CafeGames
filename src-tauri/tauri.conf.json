@@ -4,10 +4,10 @@
     "beforeBuildCommand": "yarn build",
     "beforeDevCommand": "yarn dev",
     "devPath": "http://localhost:5173",
-    "distDir": "../dist"
+    "distDir": "../server/views/"
   },
   "package": {
-    "productName": "temp",
+    "productName": "CafeGames",
     "version": "0.1.0"
   },
   "tauri": {

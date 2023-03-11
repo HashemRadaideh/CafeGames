@@ -1,14 +1,9 @@
-import './styles/Games.scss'
+import "./styles/Games.scss";
 
-export default function Games() {
-
+export default function Games(): JSX.Element {
   return (
     <>
-      <div id="Games">
-        Games
-      </div>
+      <div id="Games">Games</div>
     </>
   );
 }
-
-

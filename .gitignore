@@ -13,6 +13,7 @@ node_modules
 server/views
 dist-ssr
 *.local
+.env
 
 # Editor directories and files
 .vscode/*

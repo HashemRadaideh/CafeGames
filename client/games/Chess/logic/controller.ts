@@ -1,6 +1,6 @@
 import Rules from "./rules";
 import { socket } from "../App";
-import { PieceProps, rank, Team } from "./constants";
+import { PieceProps, Position, rank, Team } from "./constants";
 
 export default class Controller {
   chessboard: React.RefObject<HTMLDivElement>;
@@ -11,10 +11,8 @@ export default class Controller {
   setPromotePawn: React.Dispatch<React.SetStateAction<PieceProps | null>>;
   setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>;
   Pieces: PieceProps[];
-  GridX: number;
-  setGridX: React.Dispatch<React.SetStateAction<number>>;
-  GridY: number;
-  setGridY: React.Dispatch<React.SetStateAction<number>>;
+  position;
+  setPosition;
   team: Team;
 
   constructor(
@@ -27,10 +25,8 @@ export default class Controller {
     setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
     PromotePawn: PieceProps | null,
     setPromotePawn: React.Dispatch<React.SetStateAction<PieceProps | null>>,
-    GridX: number,
-    setGridX: React.Dispatch<React.SetStateAction<number>>,
-    GridY: number,
-    setGridY: React.Dispatch<React.SetStateAction<number>>
+    position: Position,
+    setPosition: React.Dispatch<React.SetStateAction<Position>>
   ) {
     this.chessboard = Chessboard;
 
@@ -47,19 +43,16 @@ export default class Controller {
     this.PromotePawn = PromotePawn;
     this.setPromotePawn = setPromotePawn;
 
-    this.GridX = GridX;
-    this.setGridX = setGridX;
-
-    this.GridY = GridY;
-    this.setGridY = setGridY;
+    this.position = position;
+    this.setPosition = setPosition;
   }
 
   promotePawn(rank: rank): void {
     const newPieces = this.Pieces.reduce((pieces, piece) => {
       if (
         this.PromotePawn &&
-        piece.col === this.PromotePawn.col &&
-        piece.row === this.PromotePawn.row
+        piece.pos.col === this.PromotePawn.pos.col &&
+        piece.pos.row === this.PromotePawn.pos.row
       ) {
         piece.rank = rank;
         const color = piece.team === "White" ? "white" : "black";
@@ -110,8 +103,10 @@ export default class Controller {
     if (!this.chessboard.current) return;
     const chessboard = this.chessboard.current;
 
-    this.setGridX(Math.floor((e.clientX - chessboard.offsetLeft) / 100));
-    this.setGridY(Math.floor((e.clientY - chessboard.offsetTop) / 100));
+    this.setPosition({
+      col: Math.floor((e.clientX - chessboard.offsetLeft) / 100),
+      row: Math.floor((e.clientY - chessboard.offsetTop) / 100),
+    });
 
     const x = e.clientX - 50;
     const y = e.clientY - 50;
@@ -150,7 +145,8 @@ export default class Controller {
     const gridY: number = Math.floor((e.clientY - chessboard.offsetTop) / 100);
 
     const currentPiece = this.Pieces.find(
-      (p: PieceProps) => p.col === this.GridX && p.row === this.GridY
+      (p: PieceProps) =>
+        p.pos.col === this.position.col && p.pos.row === this.position.row
     );
 
     if (currentPiece) {
@@ -168,8 +164,8 @@ export default class Controller {
       const newPieces: PieceProps[] = this.Pieces.reduce(
         (pieces: PieceProps[], piece: PieceProps) => {
           if (currentPiece === piece) {
-            piece.col = gridX;
-            piece.row = gridY;
+            piece.pos.col = gridX;
+            piece.pos.row = gridY;
             if (rule.isPromotable(piece)) {
               this.Promotion.current?.classList.remove("hidden");
               this.setPromotePawn(piece);
@@ -177,9 +173,9 @@ export default class Controller {
             if (rule.isCastling(piece, gridX, gridY)) {
             }
             pieces.push(piece);
-          } else if (piece.col === gridX && piece.row === gridY) {
-            piece.col = 100;
-            piece.row = 100;
+          } else if (piece.pos.col === gridX && piece.pos.row === gridY) {
+            piece.pos.col = 100;
+            piece.pos.row = 100;
             pieces.push(piece);
           } else {
             pieces.push(piece);

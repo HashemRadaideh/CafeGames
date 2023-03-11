@@ -1,13 +1,9 @@
-import './styles/Home.scss'
+import "./styles/Home.scss";
 
-export default function Home() {
-
+export default function Home(): JSX.Element {
   return (
     <>
-      <div id="Home">
-        Home
-      </div>
+      <div id="Home">Home</div>
     </>
   );
 }
-
