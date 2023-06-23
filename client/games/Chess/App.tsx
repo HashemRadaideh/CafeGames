@@ -1,15 +1,15 @@
 import "./styles/App.scss";
 import { useEffect, useState } from "react";
 import Board from "./Board";
-import { PieceProps, Team } from "./logic/constants";
+import { Piece, team } from "./logic/constants";
 import io from "socket.io-client";
 
 let host = "localhost";
 export const socket = io(`http://${host}:5000`);
 
 export default function Chessboard(): JSX.Element {
-  const [Team, setTeam] = useState<Team>("None");
-  const [Pieces, setPieces] = useState<PieceProps[]>([]);
+  const [Team, setTeam] = useState<team>("None");
+  const [Pieces, setPieces] = useState<Piece[]>([]);
 
   useEffect(() => {
     fetch("/api")

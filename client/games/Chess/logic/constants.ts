@@ -1,3 +1,8 @@
+export interface Position {
+  col: number;
+  row: number;
+}
+
 const Rank = {
   Bishop: "bishop",
   King: "king",
@@ -16,24 +21,11 @@ const TeamType = {
   None: "None",
 } as const;
 
-export type Team = keyof typeof TeamType;
+export type team = keyof typeof TeamType;
 
-export interface PieceProps {
+export interface Piece {
   img: string;
   pos: Position;
-  team: Team;
+  team: team;
   rank: rank;
-}
-
-export interface TileProps {
-  team: Team;
-  pos: Position;
-  color1?: string;
-  color2?: string;
-  piece?: PieceProps;
-}
-
-export interface Position {
-  col: number;
-  row: number;
 }

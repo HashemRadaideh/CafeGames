@@ -1,19 +1,19 @@
-import { PieceProps, Team } from "./constants";
+import { Piece, team } from "./constants";
 
 export default class Rules {
-  team: Team;
-  Pieces: PieceProps[];
+  team: team;
+  Pieces: Piece[];
 
-  constructor(team: Team, pieces: PieceProps[]) {
+  constructor(team: team, pieces: Piece[]) {
     this.team = team;
     this.Pieces = pieces;
   }
 
-  isPromotable(piece: PieceProps): boolean {
+  isPromotable(piece: Piece): boolean {
     return piece.rank === "Pawn" && piece.pos.row === 0;
   }
 
-  isCastling(piece: PieceProps, newCol: number, newRow: number): boolean {
+  isCastling(piece: Piece, newCol: number, newRow: number): boolean {
     const oldRow = piece.pos.row;
     const oldCol = piece.pos.col;
 
@@ -103,7 +103,7 @@ export default class Rules {
     return true;
   }
 
-  isMoveValid(piece: PieceProps, newCol: number, newRow: number): boolean {
+  isMoveValid(piece: Piece, newCol: number, newRow: number): boolean {
     const oldRow = piece.pos.row;
     const oldCol = piece.pos.col;
 

@@ -3,7 +3,7 @@
     "baseUrl": "./",
     "rootDir": "./",
     "outDir": "dist",
-    "target": "es6",
+    "target": "es2021",
     "useDefineForClassFields": true,
     "lib": ["DOM", "DOM.Iterable"],
     "paths": {
@@ -24,7 +24,7 @@
     "jsx": "react-jsx",
     "sourceMap": true
   },
-  "lib": ["es2015"],
+  "lib": ["es2021"],
   "include": ["client", "server"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

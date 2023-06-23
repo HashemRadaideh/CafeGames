@@ -1,6 +1,14 @@
 import "./styles/Tile.scss";
-import Piece from "./Piece";
-import { TileProps } from "./logic/constants";
+import "./styles/Piece.scss";
+import { Position, team, Piece } from "./logic/constants";
+
+export interface TileProps {
+  team: team;
+  pos: Position;
+  color1?: string;
+  color2?: string;
+  piece?: Piece;
+}
 
 export default function Tile({
   pos,
@@ -21,7 +29,7 @@ export default function Tile({
   return (
     <div className={`tile ${tileColor}-tile`}>
       {piece && (
-        <Piece
+        <Holder
           img={piece.img}
           pos={piece.pos}
           team={piece.team}
@@ -29,5 +37,13 @@ export default function Tile({
         />
       )}
     </div>
+  );
+}
+
+function Holder({ img }: Piece): JSX.Element {
+  if (img === "") return <></>;
+
+  return (
+    <div className="piece" style={{ backgroundImage: `url(${img}` }}></div>
   );
 }

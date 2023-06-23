@@ -1,10 +1,7 @@
 import Tile from "../Tile";
-import { PieceProps, rank, Team } from "./constants";
+import { Piece, rank, team } from "./constants";
 
-export function InitializeTiles(
-  Pieces: PieceProps[],
-  team: Team
-): JSX.Element[] {
+export function InitializeTiles(Pieces: Piece[], team: team): JSX.Element[] {
   const HAxis: string[] = ["a", "b", "c", "d", "e", "f", "g", "h"];
   const VAxis: string[] = ["1", "2", "3", "4", "5", "6", "7", "8"];
   const Tiles: JSX.Element[] = [];
@@ -13,7 +10,7 @@ export function InitializeTiles(
     for (const [col] of VAxis.entries()) {
       let Image: string = "";
       let Rank: rank = "None";
-      let Team: Team = "None";
+      let Team: team = "None";
 
       Pieces.forEach((piece) => {
         if (piece.pos.row === row && piece.pos.col === col) {
@@ -55,8 +52,8 @@ export function InitializeTiles(
   return Tiles;
 }
 
-export function InitializePieces(team: Team) {
-  const pieces: PieceProps[] = [];
+export function InitializePieces(team: team) {
+  const pieces: Piece[] = [];
 
   const opponent = team === "White" ? "Black" : "White";
   const player = team === "White" ? "White" : "Black";

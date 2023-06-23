@@ -2,24 +2,24 @@ import "./styles/Board.scss";
 import { socket } from "./App";
 import { useRef, useState, useEffect } from "react";
 import Controller from "./logic/controller";
-import { PieceProps, Team, Position } from "./logic/constants";
+import { Piece, team, Position } from "./logic/constants";
 import { InitializePieces, InitializeTiles } from "./logic/initial";
+import Panel from "./Panel";
 
-export default function Board({
-  team,
-  pieces,
-}: {
-  team: Team;
-  pieces: PieceProps[];
-}): JSX.Element {
+interface BoardProps {
+  team: team;
+  pieces: Piece[];
+}
+
+export default function Board({ team, pieces }: BoardProps): JSX.Element {
   const Chessboard = useRef<HTMLDivElement>(null);
   const Promotion = useRef<HTMLDivElement>(null);
 
-  const [PlayersTeam, setPlayerTeam] = useState<Team>("None");
-  const [Pieces, setPieces] = useState<PieceProps[]>([]);
-  const Board: JSX.Element[] = InitializeTiles(Pieces, PlayersTeam);
+  const [PlayerTeam, setPlayerTeam] = useState<team>("None");
+  const [Pieces, setPieces] = useState<Piece[]>([]);
+  const Board: JSX.Element[] = InitializeTiles(Pieces, PlayerTeam);
 
-  const [PromotePawn, setPromotePawn] = useState<PieceProps | null>(null);
+  const [PromotePawn, setPromotePawn] = useState<Piece | null>(null);
   const [ActivePiece, setActivePiece] = useState<HTMLElement | null>(null);
   const [position, setPosition] = useState<Position>({ col: 0, row: 0 });
 
@@ -31,7 +31,7 @@ export default function Board({
   }, [team]);
 
   useEffect(() => {
-    socket.on("opponents_turn", (pieces: PieceProps[]): void => {
+    socket.on("opponents_turn", (pieces: Piece[]): void => {
       setPieces(pieces);
     });
   }, [socket]);
@@ -46,10 +46,6 @@ export default function Board({
     setActivePiece,
     PromotePawn,
     setPromotePawn,
-    // GridX,
-    // setGridX,
-    // GridY,
-    // setGridY
     position,
     setPosition
   );
@@ -57,28 +53,7 @@ export default function Board({
   return (
     <>
       <div id="promotion" className="hidden" ref={Promotion}>
-        <div className="body">
-          <img
-            onClick={() => controller.promotePawn("Bishop")}
-            src={`./assets/${PlayersTeam === "White" ? "white" : "black"
-              }-bishop.png`}
-          />
-          <img
-            onClick={() => controller.promotePawn("Knight")}
-            src={`./assets/${PlayersTeam === "White" ? "white" : "black"
-              }-knight.png`}
-          />
-          <img
-            onClick={() => controller.promotePawn("Queen")}
-            src={`./assets/${PlayersTeam === "White" ? "white" : "black"
-              }-queen.png`}
-          />
-          <img
-            onClick={() => controller.promotePawn("Rook")}
-            src={`./assets/${PlayersTeam === "White" ? "white" : "black"
-              }-rook.png`}
-          />
-        </div>
+        <Panel controller={controller} team={PlayerTeam} />
       </div>
       <div
         className="board"

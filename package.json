@@ -10,7 +10,7 @@
   "proxy": "http://localhost:5000",
   "scripts": {
     "build": "vite build",
-    "dev": "concurrently 'vite build --watch' 'vite' 'nodemon'",
+    "dev": "concurrently 'nodemon' 'vite build --watch' 'vite'",
     "start": "vite build && ts-node ./server/index.ts",
     "preview": "vite preview",
     "build:dev": "vite build --watch",

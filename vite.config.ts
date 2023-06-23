@@ -26,7 +26,7 @@ export default defineConfig({
     },
   },
   build: {
-    watch,
+    // watch,
     outDir,
     emptyOutDir: true,
     target: ["es2021", "chrome100", "safari13"],

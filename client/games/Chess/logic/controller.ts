@@ -1,30 +1,32 @@
 import Rules from "./rules";
 import { socket } from "../App";
-import { PieceProps, Position, rank, Team } from "./constants";
+import { Piece, Position, rank, team } from "./constants";
 
 export default class Controller {
-  chessboard: React.RefObject<HTMLDivElement>;
-  Promotion: React.RefObject<HTMLDivElement>;
-  activePiece: HTMLElement | null;
-  setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>;
-  PromotePawn: PieceProps | null;
-  setPromotePawn: React.Dispatch<React.SetStateAction<PieceProps | null>>;
-  setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>;
-  Pieces: PieceProps[];
-  position;
-  setPosition;
-  team: Team;
+  private chessboard: React.RefObject<HTMLDivElement>;
+  private Promotion: React.RefObject<HTMLDivElement>;
+  private activePiece: HTMLElement | null;
+  private setActivePiece: React.Dispatch<
+    React.SetStateAction<HTMLElement | null>
+  >;
+  private PromotePawn: Piece | null;
+  private setPromotePawn: React.Dispatch<React.SetStateAction<Piece | null>>;
+  private setPieces: React.Dispatch<React.SetStateAction<Piece[]>>;
+  private Pieces: Piece[];
+  private position: Position;
+  private setPosition: React.Dispatch<React.SetStateAction<Position>>;
+  private team: team;
 
   constructor(
     Chessboard: React.RefObject<HTMLDivElement>,
     Promotion: React.RefObject<HTMLDivElement>,
-    team: Team,
-    Pieces: PieceProps[],
-    setPieces: React.Dispatch<React.SetStateAction<PieceProps[]>>,
+    team: team,
+    Pieces: Piece[],
+    setPieces: React.Dispatch<React.SetStateAction<Piece[]>>,
     ActivePiece: HTMLElement | null,
     setActivePiece: React.Dispatch<React.SetStateAction<HTMLElement | null>>,
-    PromotePawn: PieceProps | null,
-    setPromotePawn: React.Dispatch<React.SetStateAction<PieceProps | null>>,
+    PromotePawn: Piece | null,
+    setPromotePawn: React.Dispatch<React.SetStateAction<Piece | null>>,
     position: Position,
     setPosition: React.Dispatch<React.SetStateAction<Position>>
   ) {
@@ -82,7 +84,7 @@ export default class Controller {
       pieces.push(piece);
 
       return pieces;
-    }, [] as PieceProps[]);
+    }, [] as Piece[]);
 
     this.setPieces(newPieces);
 
@@ -145,7 +147,7 @@ export default class Controller {
     const gridY: number = Math.floor((e.clientY - chessboard.offsetTop) / 100);
 
     const currentPiece = this.Pieces.find(
-      (p: PieceProps) =>
+      (p: Piece) =>
         p.pos.col === this.position.col && p.pos.row === this.position.row
     );
 
@@ -161,8 +163,8 @@ export default class Controller {
         return;
       }
 
-      const newPieces: PieceProps[] = this.Pieces.reduce(
-        (pieces: PieceProps[], piece: PieceProps) => {
+      const newPieces: Piece[] = this.Pieces.reduce(
+        (pieces: Piece[], piece: Piece) => {
           if (currentPiece === piece) {
             piece.pos.col = gridX;
             piece.pos.row = gridY;
@@ -183,7 +185,7 @@ export default class Controller {
 
           return pieces;
         },
-        [] as PieceProps[]
+        [] as Piece[]
       );
 
       this.setPieces(newPieces);
